@@ -27,8 +27,9 @@ export default function Home() {
       </article>
       <article className="bg-gray-300 w-full max-w-screen-sm flex flex-col rounded-3xl p-5 group">
         <input type="text" placeholder="Write ur email"/>
+        <a href="" className="text-bigger-hello">wwww.naver.com</a>
         <span className="group-focus-within:block hidden">Make sure it is a valid email</span>
-        <button className="bg-green-50 mt-2">submit</button>
+        <button className="btn">submit</button>
       </article>
     </main>
   );
