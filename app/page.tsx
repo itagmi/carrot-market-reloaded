@@ -1,34 +1,17 @@
 export default function Home() {
   return (
-    <main className="bg-gray-100 h-screen flex items-center justify-center p-5 dark:bg-gray-700">
-      <article className="bg-white shadow-lg rounded-3xl p-5 w-full max-w-screen-sm dark:bg-gray-600">
-        <div className="flex justify-between items-center">
-          <ul>
-            <li className="text-gray-600 font-semibold -mb-1 dark:text-gray-300">
-              In tarnsit
-            </li>
-            <li className="text-4xl font-semibold dark:text-white">
-              Coollblue
-            </li>
-          </ul>
-          <div className="size-12 rounded-full bg-orange-400" />
-        </div>
-        <div className="my-2 flex items-center gap-2">
-          <span className="bg-green-400 text-white uppercase px-2.5 py-1.5 text-xs font-medium rounded-full hover:bg-green-500 hover:scale-125 transition">
-            TODAY
-          </span>
-          <span className="dark:text-gray-100">9:30 - 10:30u</span>
-        </div>
-        <article className="relative">
-          <div className="bg-gray-200 w-full h-2 rounded-full absolute" />
-          <div className="bg-green-400 w-2/3 h-2 rounded-full absolute" />
-        </article>
-        <ul className="flex justify-between items-center mt-5 text-gray-600 dark:text-gray-300">
-          <li>Expected</li>
-          <li>Sorting center</li>
-          <li>In transit</li>
-          <li className="text-gray-400 dark:text-gray-500">Delivered</li>
-        </ul>
+    <main className="bg-gray-100 h-screen flex items-center justify-center p-5 sm:bg-red-100 md:bg-green-100 lg:bg-cyan-100 xl:bg-orange-100">
+      <article className="bg-white shadow-lg rounded-3xl p-5 w-full max-w-screen-sm flex flex-col gap-2 md:flex-row">
+        <input
+          type="email"
+          placeholder="Email address"
+          className="w-full rounded-full h-10 bg-gray-200 pl-5 py-3 outline-none ring ring-transparent focus:ring-offset-2 transition-shadow placeholder:text-red-50 focus:ring-green-500 invalid:focus:ring-red-500 peer"
+          required
+        />
+        <span className="text-red-500 font-medium hidden peer-invalid:block">Email is required.</span>
+        <button className="bg-gradient-to-tr from-cyan-500 via-yellow-100 to-purple-400 text-white py-2 rounded-full active:scale-90 transition-transform font-medium focus:scale-90 outline-none md:px-10 peer-invalid:from-orange-100 peer-invalid:to-orange-100 peer-required:from-green-400 peer-required:to-green-400">
+          Login
+        </button>
       </article>
     </main>
   );
