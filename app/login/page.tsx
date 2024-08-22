@@ -1,13 +1,15 @@
 import FormButton from "@/components/form-btn";
 import FormInput from "@/components/form-input";
 import SocialLogin from "@/components/social-login";
+import { useFormStatus } from "react-dom";
 
 export default function Login() {
   const handleForm = async (formData: FormData) => {
     "use server";
-    console.log(formData.get("email"), formData.get("password"));
-    console.log("hey im running in server baby!");
+    await new Promise((resolve) => setTimeout(resolve, 5000));
+    console.log("hey logged in!");
   };
+
   return (
     <section className="flex flex-col gap-10 py-8 px-6">
       <div className="flex flex-col gap-2 *:font-medium">
@@ -29,7 +31,7 @@ export default function Login() {
           required
           error={[]}
         />
-        <FormButton loading={false} text="Create account" />
+        <FormButton text="Create account" />
       </form>
       <SocialLogin />
     </section>
