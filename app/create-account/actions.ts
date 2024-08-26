@@ -1,10 +1,10 @@
 "use server";
+import {
+  PASSWORD_MIN_LENGTH,
+  PASSWORD_REGEX,
+  PASSWORD_REGEX_ERROR,
+} from "@/lib/constants";
 import { z } from "zod";
-
-// 최소 8자, 대문자, 소문자, 숫자, 특수 문자 포함
-const passwordRegex = new RegExp(
-  /^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/
-);
 
 const checkUsername = (username: string) => {
   return !username.includes("tomato");
@@ -27,8 +27,6 @@ const formSchema = z
         invalid_type_error: "Username must be string!",
         required_error: "Where is my username?",
       })
-      .min(3, "Way too short!")
-      .max(10, "Way too looooong!")
       .toLowerCase()
       .trim() // 공백 제거
       .transform((username) => `🎈${username}`)
@@ -36,11 +34,8 @@ const formSchema = z
     email: z.string().email().toLowerCase(),
     password: z
       .string()
-      .min(4)
-      .regex(
-        passwordRegex,
-        "A password must have lowercase, UPPERCASE, a number and secial cahracters."
-      ),
+      .min(PASSWORD_MIN_LENGTH)
+      .regex(PASSWORD_REGEX, PASSWORD_REGEX_ERROR),
     confirm_password: z.string().min(10),
   })
   .refine(checkPassword, {
