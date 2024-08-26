@@ -1,6 +1,11 @@
 "use server";
 import { z } from "zod";
 
+// 최소 8자, 대문자, 소문자, 숫자, 특수 문자 포함
+const passwordRegex = new RegExp(
+  /^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/
+);
+
 const checkUsername = (username: string) => {
   return !username.includes("tomato");
 };
@@ -24,9 +29,18 @@ const formSchema = z
       })
       .min(3, "Way too short!")
       .max(10, "Way too looooong!")
+      .toLowerCase()
+      .trim() // 공백 제거
+      .transform((username) => `🎈${username}`)
       .refine((username) => checkUsername(username), "No tomato allowed!"),
-    email: z.string().email(),
-    password: z.string().min(10),
+    email: z.string().email().toLowerCase(),
+    password: z
+      .string()
+      .min(4)
+      .regex(
+        passwordRegex,
+        "A password must have lowercase, UPPERCASE, a number and secial cahracters."
+      ),
     confirm_password: z.string().min(10),
   })
   .refine(checkPassword, {
@@ -45,5 +59,7 @@ export async function createAccount(prevState: any, formData: FormData) {
   if (!result.success) {
     console.log(result.error.flatten());
     return result.error.flatten();
+  } else {
+    console.log(result.data);
   }
 }
