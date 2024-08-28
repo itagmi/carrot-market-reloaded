@@ -6,6 +6,7 @@ import {
 } from "@/lib/constants";
 import db from "@/lib/db";
 import { z } from "zod";
+import bcrypt from "bcrypt";
 
 const checkUsername = (username: string) => {
   return !username.includes("tomato");
@@ -49,8 +50,6 @@ const checkUniqueEmail = async (email: string) => {
       id: true,
     },
   });
-
-  console.log(user);
   return Boolean(user) === false;
 };
 
@@ -94,8 +93,21 @@ export async function createAccount(prevState: any, formData: FormData) {
     // console.log(result.error.flatten());
     return result.error.flatten();
   } else {
+    const hashedPassword = await bcrypt.hash(result.data.password, 12); // 2번째 인자 - 해싱 알고리즘을 12번 실행
+    const user = await db.user.create({
+      data: {
+        username: result.data.username,
+        email: result.data.email,
+        password: hashedPassword,
+      },
+      select: {
+        id: true, // 필요없는 데이터를 안받기 위해 기본적으로 create 나 findUnique를 하게 되면 모든 user의 정보를 준다. 하지만 selet 를 쓰면 id만 select 할 수 있다.
+      },
+    });
+
+    console.log(user);
     // validation 에 통과 한 후
-    // check if username is taken and check if the email is already used
+    // check if username is taken and check if the email is already used - server validation
     // 만약 두 조건이 false 하다면 (unique 하다면) hash password
     // save the user to db
     // log user in
