@@ -112,7 +112,7 @@ export async function createAccount(prevState: any, formData: FormData) {
       password: process.env.COOKIE_PASSWORD!, // 쿠키를 암호화 하기 위해 사용된다. 느낌표는 타입스크립트에게 env 에 무조건 존재한다는 것을 알려준기 위해.
     });
     //@ts-ignore
-    cookie.id = user.id; // session id 에 prisma 에서 받은 id 를 넣는다.
+    cookie.id = user.id; // session id 에 prisma 에서 받은 id 를 넣는다. 이때 IronSession 으로 인해 암호화 된다.
     await cookie.save(); /// 그리고 session 에 저장한다. 그럼 iron session이 이 데이터를 암호화 한다. 우리가 정한 암호를 이용해서. 사용자가 쿠키의 정보를 수정 할수 없게 말이다. 브라우저 쿠키에는 암호화된 쿠키가 보이고 서버에는 복호화된 아이디가 보인다.
     console.log(cookies());
     console.log(cookie);
