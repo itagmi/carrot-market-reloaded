@@ -26,7 +26,7 @@ export async function smsLogin(prevState: ActionState, formData: FormData) {
   if (!prevState.token) {
     // 만약 prevState 가 false 라면 데이터를 처음 불러온다는 뜻.
     const result = phoneSchema.safeParse(phone);
-    console.log(result.error?.flatten());
+    // console.log(result.error?.flatten());
     if (!result.success) {
       return {
         token: false,

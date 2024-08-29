@@ -26,6 +26,6 @@ export const Login = async (prevState: any, formData: FormData) => {
     console.log(result.error);
     return result.error.flatten();
   } else {
-    console.log(result.data);
+    // console.log(result.data);
   }
 };
