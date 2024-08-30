@@ -21,7 +21,7 @@ async function getUser() {
 export default async function Profile() {
   const user = await getUser();
   const logOut = async () => {
-    "use server";
+    "use server"; // inline server action
     const session = await getSession();
     session.destroy();
     redirect("/");
