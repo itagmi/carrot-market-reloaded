@@ -24,30 +24,6 @@ const checkPassword = ({
   return password === confirm_password;
 };
 
-const checkUniqueUsername = async (username: string) => {
-  const user = await db.user.findUnique({
-    where: {
-      username,
-    },
-    select: {
-      id: true,
-    },
-  });
-  return !Boolean(user);
-};
-
-const checkUniqueEmail = async (email: string) => {
-  const user = await db.user.findUnique({
-    where: {
-      email,
-    },
-    select: {
-      id: true,
-    },
-  });
-  return Boolean(user) === false;
-};
-
 const formSchema = z
   .object({
     username: z
@@ -56,19 +32,50 @@ const formSchema = z
         required_error: "Where is my username?",
       })
       .toLowerCase()
-      .trim() // 공백 제거
-      // .transform((username) => `🎈${username}`)
-      .refine((username) => checkUsername(username), "No tomato allowed!")
-      .refine(checkUniqueUsername, "This user name already taken"),
-    email: z
-      .string()
-      .email()
-      .toLowerCase()
-      // .refine((email) => checkUniqueEmail(email), "This email alreay exist"),
-      .refine(checkUniqueEmail, "This email alreay exist"),
+      .trim(), // 공백 제거
+    // .transform((username) => `🎈${username}`)
+    email: z.string().email().toLowerCase(),
     password: z.string().min(PASSWORD_MIN_LENGTH),
     // .regex(PASSWORD_REGEX, PASSWORD_REGEX_ERROR),
     confirm_password: z.string().min(PASSWORD_MIN_LENGTH),
+  })
+  .superRefine(async ({ username }, ctx) => {
+    const user = await db.user.findUnique({
+      where: {
+        username,
+      },
+      select: {
+        id: true,
+      },
+    });
+    if (user) {
+      ctx.addIssue({
+        code: "custom",
+        message: "This username is already taken",
+        path: ["username"],
+        fatal: true,
+      });
+      return z.NEVER; // zod를 중단한다 그리고 치명적이라고 fatal: true 를 옵션에 add한다. 그 뒤에 다른 refine 이 있어도 실행 하지 않는다.
+    }
+  })
+  .superRefine(async ({ email }, ctx) => {
+    const user = await db.user.findUnique({
+      where: {
+        email,
+      },
+      select: {
+        id: true,
+      },
+    });
+    if (user) {
+      ctx.addIssue({
+        code: "custom",
+        message: "This email is already taken",
+        path: ["email"],
+        fatal: true,
+      });
+      return z.NEVER; // zod를 중단한다 그리고 치명적이라고 fatal: true 를 옵션에 add한다. 그 뒤에 다른 refine 이 있어도 실행 하지 않는다.
+    }
   })
   .refine(checkPassword, {
     message: "Both passwords should be the same!",
@@ -86,7 +93,7 @@ export async function createAccount(prevState: any, formData: FormData) {
   const result = await formSchema.safeParseAsync(data); // checkUniqueUsername, checkUniqueEmail 이 async 함수 이기 때문에 safeParseAsync 를 사용한다.
 
   if (!result.success) {
-    // console.log(result.error.flatten());
+    console.log(result.error.flatten());
     return result.error.flatten();
   } else {
     // validation 에 통과 한 후
