@@ -12,7 +12,7 @@ model User {
   username   String     @unique
   email      String?    @unique
   password   String?
-  phone      String?    @unique
+  phone      String?    @unique // 옵셔널인 이유는 phone 이나 깃허브 아이디로 로그인 할 수 있기 때문에
   github_id  String?    @unique
   avatar     String?
   created_at DateTime   @default(now())
