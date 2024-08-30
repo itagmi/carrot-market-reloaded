@@ -5,7 +5,9 @@ interface SessionContent {
   id?: number;
 }
 
+// 브라우저에서 보내는 쿠키를 받는다.
 export default async function getSession() {
+  console.log(cookies());
   return getIronSession<SessionContent>(cookies(), {
     // 사용자에게 쿠키를 받는
     // 첫번 째 인자는 current cookie , 두번째는 초기설정(cookie 가 없다면 )

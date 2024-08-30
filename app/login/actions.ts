@@ -59,7 +59,8 @@ export const Login = async (prevState: any, formData: FormData) => {
     // log the user in or no
     if (ok) {
       const session = await getSession();
-      session.id = user!.id;
+      session.id = user!.id; // 세션을 변경 할 때 cookie에 session.save() 를 실행 해야 한다.
+      await session.save();
       redirect("/profile");
     } else {
       return {
