@@ -1,18 +1,32 @@
 import { NextRequest, NextResponse } from "next/server";
 import getSession from "./lib/session";
 
+interface Route {
+  [key: string]: boolean;
+}
+
+const publicOnlyUrls: Route = {
+  // object 로 한 이유는 array 보다 검색 할 때는 object 가 빠르기 때문. array 라면 모든 item의 array 를 거쳐갈 것이다.
+  "/": true,
+  "/login": true,
+  "/sms": true,
+  "/create-account": true,
+};
+
 export default async function middleware(request: NextRequest) {
-  // middleware 의 함수 이름에 의해 middleware 효과가 난다.
-  console.log("mini!");
-  const pathname = request.nextUrl.pathname;
-  if (pathname === "/") {
-    const response = NextResponse.next(); //user에 주기를 원하는 response 를 가져온다.
-    response.cookies.set("middleware-cookie", "hello~~~~~~bit");
-    return response;
-  }
-  if (pathname === "/profile") {
-    // Response fetch API 인터페이스 - 요청에 대한 응답
-    return Response.redirect(new URL("/", request.url)); // URL - javascript cunstructor
+  const session = await getSession();
+  const exists = publicOnlyUrls[request.nextUrl.pathname];
+
+  if (!session.id) {
+    //logout
+    if (!exists) {
+      return NextResponse.redirect(new URL("/", request.url));
+    } else {
+      //login
+      if (exists) {
+        return NextResponse.redirect(new URL("/home", request.url));
+      }
+    }
   }
 }
 
