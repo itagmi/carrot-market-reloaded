@@ -11,6 +11,8 @@ const publicOnlyUrls: Route = {
   "/login": true,
   "/sms": true,
   "/create-account": true,
+  "/github/start": true,
+  "/github/complete": true,
 };
 
 export default async function middleware(request: NextRequest) {
@@ -21,21 +23,23 @@ export default async function middleware(request: NextRequest) {
     //logout
     if (!exists) {
       return NextResponse.redirect(new URL("/", request.url));
-    } else {
-      //login
-      if (exists) {
-        return NextResponse.redirect(new URL("/home", request.url));
-      }
+    }
+  } else {
+    //login
+    if (exists) {
+      return NextResponse.redirect(new URL("/product", request.url));
     }
   }
 }
 
 export const config = {
   // 어느곳에서 middleware 가 실행 되야 하는지 정의.
-  matcher: ["/((?!_next/static|_next/image|favicon.ico).*)"],
+  matcher: ["/", "/profile", "/create-account", "/user/:path*"], ///user/:path* -> /user/profile 처럼 user 그리고 패스 뒤에 붙은 모든 url 을 포함 시킴,
+  //정규식도 적을수 있다.
+  // matcher: [ '/((?!api|_next/static|_next/image|favicon.ico|sitemap.xml|robots.txt).*)',]
   // 해당 header들이 없을 때 middleware를 실행
-  //   missing: [
-  //     { type: "header", key: "next-router-prefetch" },
-  //     { type: "header", key: "purpose", value: "prefetch" },
-  //   ],
+  missing: [
+    { type: "header", key: "next-router-prefetch" },
+    { type: "header", key: "purpose", value: "prefetch" },
+  ],
 };
