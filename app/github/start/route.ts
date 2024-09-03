@@ -1,3 +1,5 @@
+import { redirect } from "next/navigation";
+
 // url /github/start URL 로 GET request 보낸다.
 export async function GET() {
   const baseUrl = "https://github.com/login/oauth/authorize";
@@ -12,5 +14,5 @@ export async function GET() {
 
   const formattedParams = new URLSearchParams(params).toString();
   const finalUrl = `${baseUrl}?${formattedParams}`;
-  return Response.redirect(finalUrl); // github 에 redirect 된다.
+  return redirect(finalUrl); // github 에 redirect 된다.
 }
