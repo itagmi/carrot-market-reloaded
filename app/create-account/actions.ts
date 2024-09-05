@@ -9,6 +9,7 @@ import { z } from "zod";
 import bcrypt from "bcrypt";
 import { redirect } from "next/navigation";
 import getSession from "@/lib/session";
+import { updateSession } from "@/lib/session";
 
 const checkUsername = (username: string) => {
   return !username.includes("tomato");
@@ -111,12 +112,6 @@ export async function createAccount(prevState: any, formData: FormData) {
       },
     });
     // log the user in
-    const session = await getSession();
-
-    session.id = user.id; // session id 에 prisma 에서 받은 id 를 넣는다. 이때 IronSession 으로 인해 암호화 된다.
-    await session.save(); /// 그리고 session 에 저장한다. 그럼 iron session이 이 데이터를 암호화 한다. 우리가 정한 암호를 이용해서. 사용자가 쿠키의 정보를 수정 할수 없게 말이다. 브라우저 쿠키에는 암호화된 쿠키가 보이고 서버에는 복호화된 아이디가 보인다.
-    console.log(session);
-    // redirect '/home
-    redirect("/profile");
+    updateSession(user.id);
   }
 }

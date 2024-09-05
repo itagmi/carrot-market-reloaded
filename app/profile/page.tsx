@@ -11,7 +11,7 @@ async function getUser() {
       },
     });
     if (user) {
-      console.log("here");
+      // console.log("here");
       return user;
     }
   }

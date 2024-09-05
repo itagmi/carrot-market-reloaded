@@ -8,8 +8,7 @@ import {
 import db from "@/lib/db";
 import { z } from "zod";
 import bcrypt from "bcrypt";
-import getSession from "@/lib/session";
-import { redirect } from "next/navigation";
+import { updateSession } from "@/lib/session";
 
 const checkEmailExists = async (email: string) => {
   // find a user with the email
@@ -58,10 +57,7 @@ export const Login = async (prevState: any, formData: FormData) => {
     ); // user email 이 확실히 존재 하고 있다는것을 알고 있다.- 느낌표 password 가 없다면 빈문자와 비교한다. - for now
     // log the user in or no
     if (ok) {
-      const session = await getSession();
-      session.id = user!.id; // 세션을 변경 할 때 cookie에 session.save() 를 실행 해야 한다.
-      await session.save();
-      redirect("/profile");
+      updateSession(user!.id);
     } else {
       return {
         fieldErrors: {

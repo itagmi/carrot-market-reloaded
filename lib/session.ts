@@ -1,5 +1,6 @@
 import { getIronSession } from "iron-session";
 import { cookies } from "next/headers";
+import { redirect } from "next/navigation";
 
 interface SessionContent {
   id?: number;
@@ -15,3 +16,10 @@ export default async function getSession() {
     password: process.env.COOKIE_PASSWORD!, // 쿠키를 암호화 하기 위해 사용된다. 느낌표는 타입스크립트에게 env 에 무조건 존재한다는 것을 알려준기 위해.
   });
 }
+
+export const updateSession = async (id: number) => {
+  const session = await getSession();
+  session.id = id;
+  await session.save();
+  return redirect("/profile");
+};
