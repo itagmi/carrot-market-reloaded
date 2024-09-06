@@ -3,7 +3,7 @@
 import Button from "@/components/button";
 import Input from "@/components/input";
 import { useFormState } from "react-dom";
-import { smsLogin } from "./action";
+import { smsLogIn } from "./action";
 
 const initialState = {
   token: false,
@@ -11,7 +11,7 @@ const initialState = {
 };
 
 export default function SMSLogin() {
-  const [state, dispatch] = useFormState(smsLogin, initialState); // 2번째 인자의 initial state 는 이 함수를 최초 호출 할 때의 prevState 값이 된다.
+  const [state, dispatch] = useFormState(smsLogIn, initialState); // 2번째 인자의 initial state 는 이 함수를 최초 호출 할 때의 prevState 값이 된다.
   return (
     <section className="flex flex-col gap-10 py-8 px-6">
       <div className="flex flex-col gap-2 *:font-medium">
